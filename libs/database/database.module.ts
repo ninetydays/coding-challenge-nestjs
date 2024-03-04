@@ -5,7 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: [`.env.${process.env.NODE_ENV}`, '.env.local'],
+        }),
+      ],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
@@ -17,7 +21,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [ConfigService],
     }),
   ],
-  providers: [],
-  exports: [],
+  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}

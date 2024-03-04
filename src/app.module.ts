@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
 
+console.log('app.module process.env.NODE_ENV:', process.env.NODE_ENV);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
