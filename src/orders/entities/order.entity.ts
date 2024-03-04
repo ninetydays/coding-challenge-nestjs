@@ -25,12 +25,12 @@ export class Order {
   @ManyToOne('User', 'orders')
   user: Relation<User>;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   userId: string;
 
   @ManyToOne('Product', 'orders')
   product: Relation<Product>;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   productId: string;
 }
