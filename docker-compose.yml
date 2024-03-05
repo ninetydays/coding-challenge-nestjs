@@ -9,5 +9,5 @@ services:
     volumes:
       - ./docker/db:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_USER: docker
-      POSTGRES_PASSWORD: supersecurepassword
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
