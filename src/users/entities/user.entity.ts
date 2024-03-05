@@ -24,7 +24,7 @@ export class User {
   phoneNumber: string;
 
   @Column({ nullable: true })
-  encryptedPassword: string;
+  password: string;
 
   @Column({ default: 0 })
   deposit: number;
