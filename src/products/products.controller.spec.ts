@@ -7,15 +7,20 @@ import { Product } from './entities/product.entity';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [DatabaseModule, TypeOrmModule.forFeature([Product])],
       controllers: [ProductsController],
       providers: [ProductsService],
     }).compile();
 
     controller = module.get<ProductsController>(ProductsController);
+  });
+
+  afterAll(() => {
+    return module.close();
   });
 
   it('should be defined', () => {
