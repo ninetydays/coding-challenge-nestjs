@@ -13,7 +13,6 @@ describe('UsersController (e2e)', () => {
   let app: INestApplication;
   let userRepository: Repository<User>;
   let user: User;
-  const email = faker.internet.email();
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -21,7 +20,10 @@ describe('UsersController (e2e)', () => {
     }).compile();
 
     userRepository = module.get<Repository<User>>('UserRepository');
-    user = await userRepository.save({ email, password: 'password' });
+    user = await userRepository.save({
+      email: faker.internet.email(),
+      password: 'password',
+    });
     app = module.createNestApplication();
     await app.init();
   });
