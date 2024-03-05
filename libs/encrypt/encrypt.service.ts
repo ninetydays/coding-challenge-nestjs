@@ -7,7 +7,7 @@ type IAttributes = {
 };
 
 @Injectable()
-export class EncryptorService {
+export class EncryptService {
   secretKey: string;
   constructor(private configService: ConfigService) {
     this.secretKey = this.configService.get('SECRET_KEY');

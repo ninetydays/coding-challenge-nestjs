@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EncryptorModule } from './encryptor.module';
-import { EncryptorService } from './encryptor.service';
+import { EncryptModule } from './encrypt.module';
+import { EncryptService } from './encrypt.service';
 import { faker } from '@faker-js/faker';
 
-describe('EncryptorService', () => {
-  let service: EncryptorService;
+describe('EncryptService', () => {
+  let service: EncryptService;
   let module: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [EncryptorModule],
+      imports: [EncryptModule],
     }).compile();
 
-    service = await module.get<EncryptorService>('EncryptorService');
+    service = await module.get<EncryptService>('EncryptService');
   });
 
   afterAll(async () => {

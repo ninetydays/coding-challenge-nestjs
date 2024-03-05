@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EncryptorService } from './encryptor.service';
+import { EncryptService } from './encrypt.service';
 
-const encryptorFactory = {
-  provide: 'EncryptorService',
+const encryptFactory = {
+  provide: 'EncryptService',
   useFactory: (configService: ConfigService) =>
-    new EncryptorService(configService),
+    new EncryptService(configService),
   inject: [ConfigService],
 };
 
@@ -15,7 +15,7 @@ const encryptorFactory = {
       envFilePath: [`.env.${process.env.NODE_ENV}`, '.env.local'],
     }),
   ],
-  providers: [encryptorFactory],
-  exports: [encryptorFactory],
+  providers: [encryptFactory],
+  exports: [encryptFactory],
 })
-export class EncryptorModule {}
+export class EncryptModule {}
