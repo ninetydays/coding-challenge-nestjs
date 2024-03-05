@@ -14,7 +14,6 @@ describe('OrdersService', () => {
   let userRepository: Repository<User>;
   let productRepository: Repository<Product>;
   const email = faker.internet.email();
-  const name = faker.commerce.productName();
   let user: User;
   let product: Product;
   let id: string;
@@ -33,7 +32,7 @@ describe('OrdersService', () => {
     productRepository = module.get<Repository<Product>>('ProductRepository');
     user = await userRepository.save({ email, password: 'password' });
     product = await productRepository.save({
-      name,
+      name: faker.commerce.productName(),
       price: Number(faker.commerce.price()),
     });
   });
