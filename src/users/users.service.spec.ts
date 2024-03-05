@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
 import { DatabaseModule } from 'libs/database';
+import { EncryptModule } from 'libs/encrypt';
 import { UsersService } from 'src/users/users.service';
 import { User } from './entities/user.entity';
 
@@ -13,7 +14,11 @@ describe('UsersService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [DatabaseModule, TypeOrmModule.forFeature([User])],
+      imports: [
+        DatabaseModule,
+        TypeOrmModule.forFeature([User]),
+        EncryptModule,
+      ],
       providers: [UsersService],
     }).compile();
 
@@ -53,5 +58,10 @@ describe('UsersService', () => {
   it('removes a user', async () => {
     await service.remove(id);
     expect(service.findAll({ where: { email } })).resolves.toHaveLength(0);
+  });
+
+  it('generates JWT', async () => {
+    const jwt = service.getJWT(id);
+    expect(service.verifyJWT(jwt)['id']).toBe(id);
   });
 });
