@@ -1,81 +1,67 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
 import { Repository } from 'typeorm';
+import * as request from 'supertest';
+import { AppModule } from 'src/app.module';
 import { DatabaseModule } from 'libs/database';
-import { OrdersService } from 'src/orders/orders.service';
 import { Order } from 'src/orders/entities/order.entity';
-import { Product } from 'src/products/entities/product.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Product } from 'src/products/entities/product.entity';
 
-describe('OrdersService', () => {
-  let service: OrdersService;
+describe('OrdersController (e2e)', () => {
   let module: TestingModule;
+  let app: INestApplication;
   let userRepository: Repository<User>;
   let productRepository: Repository<Product>;
-  const email = faker.internet.email();
+  let orderRepository: Repository<Order>;
   let user: User;
   let product: Product;
-  let id: string;
+  let order: Order;
+  const email = faker.internet.email();
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
+        AppModule,
         DatabaseModule,
         TypeOrmModule.forFeature([Order, User, Product]),
       ],
-      providers: [OrdersService],
     }).compile();
 
-    service = await module.get<OrdersService>(OrdersService);
     userRepository = module.get<Repository<User>>('UserRepository');
     productRepository = module.get<Repository<Product>>('ProductRepository');
+    orderRepository = module.get<Repository<Order>>('OrderRepository');
     user = await userRepository.save({ email, password: 'password' });
     product = await productRepository.save({
       name: faker.commerce.productName(),
       price: Number(faker.commerce.price()),
     });
+    order = await orderRepository.save({
+      userId: user.id,
+      productId: product.id,
+    });
+    app = module.createNestApplication();
+    await app.init();
   });
 
   afterAll(async () => {
+    await orderRepository.delete(order.id);
     await userRepository.delete(user.id);
     await productRepository.delete(product.id);
+    await app.close();
     await module.close();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
-  it('creates new order', async () => {
-    const res = await service.create({
-      count: 1,
-      userId: user.id,
-      productId: product.id,
+  describe('with /orders router', () => {
+    it('/:id (GET)', () => {
+      return request(app.getHttpServer())
+        .get(`/orders/${order.id}`)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual(order);
+        });
     });
-    id = res.id;
-    expect(res.id).toBeTruthy();
-  });
-
-  it('queries orders', async () => {
-    expect(service.findAll({ where: { id } })).resolves.toHaveLength(1);
-  });
-
-  it('queries a order by id', () => {
-    expect(service.findOne(id)).resolves.toMatchObject({
-      count: 1,
-      userId: user.id,
-      productId: product.id,
-    });
-  });
-
-  it('updates a order', async () => {
-    const res = await service.update(id, { count: 2 });
-    expect(res.affected).toBe(1);
-  });
-
-  it('removes a order', async () => {
-    await service.remove(id);
-    expect(service.findAll({ where: { id } })).resolves.toHaveLength(0);
   });
 });
