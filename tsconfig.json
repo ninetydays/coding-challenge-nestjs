@@ -20,7 +20,7 @@
     "paths": {
       "src/*": ["src/*"],
       "test/*": ["test/*"],
-      "libs/*": ["libs/*"]
+      "libs/*": ["src/libs/*"]
     }
   }
 }

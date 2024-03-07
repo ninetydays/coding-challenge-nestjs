@@ -14,9 +14,9 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "jest",
-    "migration:run": "typeorm-ts-node-commonjs -d ./libs/database/config.ts migration:run",
-    "migration:generate": "typeorm-ts-node-commonjs -d ./libs/database/config.ts migration:generate ./migrations/migrations",
-    "migration:revert": "typeorm-ts-node-commonjs -d ./libs/database/config.ts migration:revert"
+    "migration:run": "typeorm-ts-node-commonjs -d ./src/libs/database/config.ts migration:run",
+    "migration:generate": "typeorm-ts-node-commonjs -d ./src/libs/database/config.ts migration:generate ./migrations/migrations",
+    "migration:revert": "typeorm-ts-node-commonjs -d ./src/libs/database/config.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -76,7 +76,7 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1",
       "^test/(.*)$": "<rootDir>/test/$1",
-      "^libs/(.*)$": "<rootDir>/libs/$1"
+      "^libs/(.*)$": "<rootDir>/src/libs/$1"
     }
   }
 }
